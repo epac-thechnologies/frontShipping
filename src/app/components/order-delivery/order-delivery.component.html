@@ -1,0 +1,44 @@
+<h5 style="color: #0a3d62;font-weight: bold;" class="text-center">Order Delivery</h5>
+<hr>
+<div class="container">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+    <div class="form-row align-items-center justify-content-center">
+      <div class="col-auto">
+
+        <input #search type="text" class="form-control mb-2" id="search" placeholder="Please enter ISBN"
+          formControlName="search">
+      </div>
+      <!--
+      <div class="col-auto">
+        <div class="form-check mb-2">
+          <input class="form-check-input" name="searchCriteria" type="radio" id="orderId" value="orderId"
+            formControlName="searchCriteria">
+          <label class="form-check-label" for="orderId">
+            Search by OrderId
+          </label>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <input class="form-check-input" name="searchCriteria" type="radio" id="isbn" value="isbn"
+            formControlName="searchCriteria">
+          <label class="form-check-label" for="isbn">
+            Search by ISBN
+          </label>
+        </div>
+      </div>
+      -->
+
+      <div class="col-auto">
+        <button [disabled]="!searchForm.valid" type="submit" class="btn btn-primary" (click)="searchForOrder()"
+          style="margin-top: -8px;">Search <i class="fa fa-search"></i></button>
+      </div>
+    </div>
+  </form>
+
+  <br>
+
+  <div *ngIf="rowData.length == 0; else datatable" class="alert alert-info" role="alert">
+    There is no data to show, please import an order using ISBN.
+  </div>
+  <ng-template #datatable>
+    <app-datatable [columnDefs]="columnDefs" [rowData]="rowData" [buttons]="buttons"></app-datatable>
+  </ng-template>
+</div>

@@ -1,0 +1,98 @@
+<h5 style="color: #0a3d62;font-weight: bold;" class="text-center">Clients Administration</h5>
+<hr>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-10"><h4>Clients <b>Details</b></h4></div>
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal"
+            (click)="onAddTrigger()">Add <i class="fa fa-plus"></i></button>
+        </div>
+    </div>
+    <br>
+  
+    <app-datatable [columnDefs]="columnDefs" [rowData]="rowData" [buttons]="buttons"></app-datatable>
+  
+  </div>
+
+  <!-- Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{mode}} client</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="clientForm" class="col-md-12" style="padding: 20px;">
+
+    
+                <div class="form-row padding-container">
+
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="id">Id#</label>
+                        <input type="text" class="form-control" id="id" formControlName="id" required>
+                        <div *ngIf="clientForm.get('id').invalid && (clientForm.get('id').dirty || clientForm.get('id').touched)"
+                            style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                            Please provide an id.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="accountName">Account name</label>
+                        <input type="text" class="form-control" id="accountName" formControlName="accountName" required>
+                        <div *ngIf="clientForm.get('accountName').invalid && (clientForm.get('accountName').dirty || clientForm.get('accountName').touched)"
+                            style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                            Please provide an account name.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="accountManager">Account Manager</label>
+                        <input type="text" class="form-control" id="accountManager" formControlName="accountManager" required>
+                        <div *ngIf="clientForm.get('accountManager').invalid && (clientForm.get('accountManager').dirty || clientForm.get('accountManager').touched)"
+                            style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                            Please provide an account manager.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="shippingAdress">Shipping Adress</label>
+                        <input type="text" class="form-control" id="shippingAdress" formControlName="shippingAdress" required>
+                        <div *ngIf="clientForm.get('shippingAdress').invalid && (clientForm.get('shippingAdress').dirty || clientForm.get('shippingAdress').touched)"
+                            style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                            Please provide shipping adress.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="billingAdress">Billing Adress</label>
+                        <input type="text" class="form-control" id="billingAdress" formControlName="billingAdress" required>
+                        <div *ngIf="clientForm.get('billingAdress').invalid && (clientForm.get('billingAdress').dirty || clientForm.get('billingAdress').touched)"
+                            style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                            Please provide billing adress.
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="packagingTypes">Packaging Type</label><br>
+                    <p-multiSelect  [options]="packagingTypesOptions" formControlName="packagingTypes"></p-multiSelect>
+                    </div>
+
+                    <div class="form-group col-md-12 padding-container">
+                        <label for="packagingTypes">Label Position</label><br>
+                    <p-dropdown  [options]="labelPositionOptions" formControlName="assemblyLabelPosition"></p-dropdown>
+                    </div>
+                </div>
+
+    
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button *ngIf="mode=='Edit'" type="submit" (click)="onUpdateClient()" class="btn btn-primary">Save changes</button>
+          <button *ngIf="mode=='Add'" type="button" (click)="onAddClient()" class="btn btn-primary" data-dismiss="modal">Add client</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

@@ -1,0 +1,58 @@
+.vl {
+  border-left: 1px solid grey;
+  height: auto;
+}
+
+p {
+  margin: -2px;
+}
+.boxes {
+  padding: 0.5cm;
+  border: 1px solid black;
+}
+.writeLine {
+  border-bottom: 0.5px solid black;
+}
+.assemblyLabelBook {
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  background-image: url('../../../assets/img/book.svg');
+  background-repeat: no-repeat;
+  height: 500px !important;
+}
+.label-top-left {
+  position: relative;
+  background-color: #ffffff;
+  width: 115px;
+  top: 55px;
+  left: 135px;
+}
+.label-top-right {
+  position: relative;
+  background-color: #ffffff;
+  width: 115px;
+  top: 55px;
+  left: 265px;
+}
+.label-bottom-left {
+  position: relative;
+  background-color: #ffffff;
+  width: 115px;
+  top: 365px;
+  left: 135px;
+}
+.label-bottom-right {
+  position: relative;
+  background-color: #ffffff;
+  width: 115px;
+  top: 365px;
+  left: 265px;
+}
+.label-center {
+  position: relative;
+  background-color: #ffffff;
+  width: 115px;
+  top: 195px;
+  left: 205px;
+}

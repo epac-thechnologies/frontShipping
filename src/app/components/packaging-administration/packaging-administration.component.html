@@ -1,0 +1,301 @@
+<h5 style="color: #0a3d62;font-weight: bold;" class="text-center">Packaging Administration</h5>
+<hr>
+
+<!-- Tabs -->
+<section id="tabs">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 ">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-packages-tab" data-toggle="tab" href="#nav-packages"
+                            role="tab" aria-controls="nav-packages" aria-selected="true" (click)="getPackages()">Packages</a>
+                        <a class="nav-item nav-link" id="nav-boxes-tab" data-toggle="tab" href="#nav-boxes" role="tab"
+                            aria-controls="nav-boxes" aria-selected="false" (click)="getBoxes()">Boxes</a>
+
+                    </div>
+                </nav>
+                <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+
+                    <!--======================PACKAGES=========================-->
+                    <div class="tab-pane fade show active" id="nav-packages" role="tabpanel"
+                        aria-labelledby="nav-packages-tab">
+                        <div class="row">
+                            <div class="col-3">
+                                <h4>Packages <b>Details</b></h4>
+                            </div>
+                            <div class="offset-7 col-2">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#editModal" (click)="onAddTrigger()">Add <i
+                                        class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <br>
+
+                        <app-datatable [columnDefs]="columnDefs" [rowData]="rowData" [buttons]="buttons">
+                        </app-datatable>
+                    </div>
+                    <!--======================PACKAGES=========================-->
+                    <!--======================BOXES=========================-->
+                    <div class="tab-pane fade" id="nav-boxes" role="tabpanel" aria-labelledby="nav-boxes-tab">
+                        <div class="row">
+                            <div class="col-3">
+                                <h4>Boxes <b>Details</b></h4>
+                            </div>
+                            <div class="offset-7 col-2">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#editModal2" (click)="onAddTrigger2()">Add <i
+                                        class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <br>
+
+                        <app-datatable [columnDefs]="columnDefs2" [rowData]="rowData2" [buttons]="buttons2">
+                        </app-datatable>
+                    </div>
+                    <!--======================BOXES=========================-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{mode}} Package</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="packageForm" class="col-md-12" style="padding: 20px;">
+
+
+                    <div class="form-row padding-container">
+
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="id">Id#</label>
+                            <input type="text" class="form-control" id="id" formControlName="id" required [disabled]="mode=='Edit'">
+                            <div *ngIf="packageForm.get('id').invalid && (packageForm.get('id').dirty || packageForm.get('id').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide an id.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="accountName">Package name</label>
+                            <input type="text" class="form-control" id="accountName" formControlName="packageName"
+                                required>
+                            <div *ngIf="packageForm.get('packageName').invalid && (packageForm.get('packageName').dirty || packageForm.get('packageName').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide a package name.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="packagingTypes">Active</label><br>
+                            <p-selectButton [options]="activeOptions" formControlName="active"></p-selectButton>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button *ngIf="mode=='Edit'" type="submit" (click)="onUpdatePackage()" class="btn btn-primary">Save
+                    changes</button>
+                <button *ngIf="mode=='Add'" type="button" (click)="onAddPackage()" data-dismiss="modal" class="btn btn-primary">Add
+                    package</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- View Modal -->
+<div *ngIf="selectedPackInfo != undefined" class="modal fade" id="viewModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{selectedPackInfo.packageName}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-6">
+                    Package Informations:
+                    <ul class="list-group">
+                        <li class="list-group-item">Package Id: {{selectedPackInfo.packagingtypeid}}</li>
+                        <li class="list-group-item">Package Name: {{selectedPackInfo.packageName}}</li>
+                        <li class="list-group-item" *ngIf="selectedPackInfo.active">Active: Yes</li>
+                        <li class="list-group-item" *ngIf="!selectedPackInfo.active">Active: No</li>
+                    </ul>
+                </div>
+                <div class="col-6">
+
+                    <div *ngIf="selectedPackInfo.boxs.length>0;else noBoxes">
+                        Related Boxes:
+                    <ul class="list-group" *ngFor="let box of selectedPackInfo.boxs" >
+                        <li class="list-group-item">{{box.boxNum}}</li>
+                    </ul>
+                    </div>
+                    <ng-template #noBoxes>
+                        <br>
+                        <div class="alert alert-dismissible alert-light">
+                            <strong>Oups!</strong> There is no boxes related with this package!
+                          </div>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--++++++++++++++++++++++BOXES+++++++++++++++++++-->
+<!--++++++++++++++++++++++++++++++++++++++++++++++-->
+<!-- Edit Modal 2 -->
+<div class="modal fade" id="editModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{mode2}} box</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="boxForm" class="col-md-12" style="padding: 20px;">
+
+
+                    <div class="form-row padding-container">
+
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="id">Id#</label>
+                            <input type="text" class="form-control" id="id" formControlName="id" required [disabled]="mode2=='Edit'">
+                            <div *ngIf="boxForm.get('id').invalid && (boxForm.get('id').dirty || boxForm.get('id').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide an id.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="weight">Box weight</label>
+                            <input type="number" class="form-control" id="weight" formControlName="weight" required>
+                            <div *ngIf="boxForm.get('weight').invalid && (boxForm.get('weight').dirty || boxForm.get('weight').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide box weight.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="existantNumber">Existant number</label>
+                            <input type="number" class="form-control" id="existantNumber"
+                                formControlName="existantNumber" required>
+                            <div *ngIf="boxForm.get('existantNumber').invalid && (boxForm.get('existantNumber').dirty || boxForm.get('existantNumber').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide existant quantity.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="length">Box length</label>
+                            <input type="number" class="form-control" id="length" formControlName="length" required>
+                            <div *ngIf="boxForm.get('length').invalid && (boxForm.get('length').dirty || boxForm.get('length').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide box length.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="width">Box width</label>
+                            <input type="number" class="form-control" id="width" formControlName="width" required>
+                            <div *ngIf="boxForm.get('width').invalid && (boxForm.get('width').dirty || boxForm.get('width').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide box width.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="width">Box depth</label>
+                            <input type="number" class="form-control" id="depth" formControlName="depth" required>
+                            <div *ngIf="boxForm.get('depth').invalid && (boxForm.get('depth').dirty || boxForm.get('depth').touched)"
+                                style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                                Please provide box depth.
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="packagingTypes">Package Types</label><br>
+                            <p-selectButton [options]="packagingTypesOptions" formControlName="packagingTypes" multiple="true"></p-selectButton>
+                        </div>
+                        <div class="form-group col-md-12 padding-container">
+                            <label for="packagingTypes">Active</label><br>
+                            <p-selectButton [options]="activeOptions" formControlName="active"></p-selectButton>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button *ngIf="mode2=='Edit'" type="submit" (click)="onUpdateBox()" class="btn btn-primary" >Save
+                    changes</button>
+                <button *ngIf="mode2=='Add'" type="button" (click)="onAddBox()" class="btn btn-primary" data-dismiss="modal">Add
+                    Box</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- View Modal 2-->
+<div *ngIf="selectedBoxInfo != undefined" class="modal fade" id="viewModal2" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{selectedBoxInfo.id}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-6">
+                    Package Informations:
+                    <ul class="list-group">
+                        <li class="list-group-item">{{selectedBoxInfo.id}}</li>
+                        <li class="list-group-item">{{selectedBoxInfo.packagingType}}</li>
+                        <li class="list-group-item">{{selectedBoxInfo.active}}</li>
+                    </ul>
+                </div>
+                <div class="col-6">
+                    Related Boxes:
+                    <ul class="list-group">
+                        <li class="list-group-item">Box 1</li>
+                        <li class="list-group-item">Box 2</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>

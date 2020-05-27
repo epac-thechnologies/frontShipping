@@ -1,0 +1,5 @@
+{
+    "Api_Base": "http://service.pacet.mx",
+    "Api_Security": "http://security.pacet.mx",
+    "Mode": "pacex"
+}

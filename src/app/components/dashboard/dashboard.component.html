@@ -1,0 +1,214 @@
+
+<ngx-spinner></ngx-spinner>
+
+<h5 style="color: #0a3d62;font-weight: bold;" class="text-center">Label Generator</h5>
+<hr>
+<div class="row">
+    <br>
+    <div class="row justify-content-center">
+
+        <form [formGroup]="ticketForm"  (ngSubmit)="onGeneratePdf()" class="col-md-6" style="padding: 20px;">
+
+            <div class="form-row padding-container">
+                <div class="form-group col-md-6 padding-container">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title" name="title" formControlName="title" required>
+                    <div *ngIf="ticketForm.get('title').invalid && (ticketForm.get('title').dirty || ticketForm.get('title').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide a title.
+                    </div>
+                </div>
+                <div class="form-group col-md-6 padding-container">
+                    <label for="author">Author</label>
+                    <input type="text" class="form-control" id="author" formControlName="author" required>
+                    <div *ngIf="ticketForm.get('author').invalid && (ticketForm.get('author').dirty || ticketForm.get('author').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide an author.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row padding-container">
+                <div class="form-group col-md-12 padding-container">
+                    <label for="poNumber">PO Number</label>
+                    <input type="text" class="form-control" id="poNumber" formControlName="poNumber" required>
+                    <div *ngIf="ticketForm.get('poNumber').invalid && (ticketForm.get('poNumber').dirty || ticketForm.get('poNumber').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide a PO number.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row padding-container">
+                <div class="form-group col-md-6 padding-container">
+                    <label for="printNumber">Print Number</label>
+                    <input type="number" class="form-control" id="printNumber" formControlName="printNumber" required>
+                    <div *ngIf="ticketForm.get('printNumber').invalid && (ticketForm.get('printNumber').dirty || ticketForm.get('printNumber').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide print number.
+                    </div>
+                </div>
+                <div class="form-group col-md-6 padding-container">
+                    <label for="weight">Weight (lbs)</label>
+                    <input type="number" class="form-control" id="weight" formControlName="weight" required>
+                    <div *ngIf="ticketForm.get('weight').invalid && (ticketForm.get('weight').dirty || ticketForm.get('weight').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide weight.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group padding-container">
+                <label for="isbn">ISBN</label>
+                <input type="text" class="form-control" id="isbn" formControlName="isbn" required>
+                <div *ngIf="ticketForm.get('isbn').invalid && (ticketForm.get('isbn').dirty || ticketForm.get('isbn').touched)"
+                    style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                    Please provide ISBN.
+                </div>
+            </div>
+
+            <div class="form-row padding-container">
+                <div class="form-group col-md-6 padding-container">
+                    <label for="totalQty">Total Quantity</label>
+                    <input type="number" class="form-control" id="totalQty" formControlName="totalQty" required>
+                    <div *ngIf="ticketForm.get('totalQty').invalid && (ticketForm.get('totalQty').dirty || ticketForm.get('totalQty').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide total quantity.
+                    </div>
+                </div>
+                <div class="form-group col-md-6 padding-container">
+                    <label for="perbox">Quantity Per Box</label>
+                    <input type="number" class="form-control" id="perbox" formControlName="perBoxQty" required>
+                    <div *ngIf="ticketForm.get('perBoxQty').invalid && (ticketForm.get('perBoxQty').dirty || ticketForm.get('perBoxQty').touched)"
+                        style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                        Please provide quantity per box.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" formControlName="date" required>
+                <div *ngIf="ticketForm.get('date').invalid && (ticketForm.get('date').dirty || ticketForm.get('date').touched)"
+                    style="margin-top: 3px;font-size: 11px; color:rgb(219, 85, 85)">
+                    Please provide a due date.
+                </div>
+            </div>
+            <div class="padding-container" style="margin-top: 10px;">
+                <button type="button" class="btn btn-info" (click)="onReset()">Reset <i class="fa fa-undo" aria-hidden="true"></i></button>
+                &nbsp;&nbsp;
+                <button [disabled]="!ticketForm.valid" type="submit" class="btn btn-primary">Generate
+                    Labels <i class="fa fa-barcode" aria-hidden="true"></i></button>
+                    &nbsp;&nbsp;
+                <button [disabled]="!downloadIsReady" type="button" class="btn btn-success"
+                    (click)="onDownloadPdf()">Download <i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
+            </div>
+<br><!--<h2 *ngIf="demoTickets.length > 0 && demoTickets[0].qtyPerBox === demoTickets[1].qtyPerBox">Number of Boxes : {{tickets.length}}</h2>
+<h2 *ngIf="demoTickets.length > 0 && demoTickets[0].qtyPerBox !== demoTickets[1].qtyPerBox">Number of Boxes : {{tickets.length - 1}}</h2>
+-->
+
+        </form>
+
+        <div class="col-md-6" style="padding: 20px;">
+            <div id="ticket" class="row col-12 text-center">
+                <div class="row col-12">
+                    <h5>Title: </h5>
+                    <h5>&nbsp;{{ ticketForm.value.title | uppercase }}</h5>
+                </div>
+                <div class="row col-12">
+                    <h5>Author: </h5>
+                    <h5>&nbsp;{{ ticketForm.value.author }}</h5>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h5>P.O.#: {{ ticketForm.value.poNumber }}</h5>
+                    <ngx-barcode bc-height="35" [bc-value]="ticketForm.value.poNumber"></ngx-barcode>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h4 class="text-center"><strong>STOCK ITEM</strong></h4>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h5>Print#: {{ ticketForm.value.printNumber }}</h5>
+                    <ngx-barcode bc-height="35" [bc-value]="ticketForm.value.printNumber"></ngx-barcode>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h5>Weight: {{ ticketForm.value.weight }}lbs</h5>
+                    <ngx-barcode bc-height="35" [bc-value]="ticketForm.value.weight"></ngx-barcode>
+                </div>
+                <div class="col-8" style="border: 2px solid black;">
+                    <h5>ISBN: {{ ticketForm.value.isbn }}</h5>
+                    <ngx-barcode bc-height="35" [bc-value]="ticketForm.value.isbn"></ngx-barcode>
+                </div>
+                <div class="col-4" style="border: 2px solid black;">
+                    <h5>Quantity: {{ ticketForm.value.perBoxQty }}</h5>
+                    <ngx-barcode bc-height="35" [bc-value]="ticketForm.value.perBoxQty"></ngx-barcode>
+                </div>
+                <div class="row col-12">
+                    <span>Manufactured by EPAC, Monterry, MX . &nbsp;{{ dueDate }} &nbsp; <strong
+                            style="border: 1px solid black;">BOX 1 of
+                            N</strong></span>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <div id="ticket-content1" #ticketContent class="label-container collapse">
+        <div class="row" style="width:11.4in;height: 4.13in;margin-left: 7px;" *ngFor="let ticket of demoTickets">
+            <div id="ticket" class="row col-6 text-center" style="margin-top:25px;">
+                <div class="row col-12">
+                    <h5>Title: </h5>
+                    <h5>&nbsp;{{ ticketForm.value.title | uppercase }}</h5>
+                </div>
+                <div class="row col-12">
+                    <h5>Author: </h5>
+                    <h5>&nbsp;{{ ticketForm.value.author }}</h5>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h5>P.O.#: {{ ticketForm.value.poNumber }}</h5>
+                    <ngx-barcode bc-width="1.5" bc-format="CODE39" bc-height="30"
+                        [bc-value]="ticketForm.value.poNumber"></ngx-barcode>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h4 class="text-center"><strong>STOCK ITEM</strong></h4>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h5>Print#: {{ ticketForm.value.printNumber }}</h5>
+                    <ngx-barcode bc-width="1.5" bc-format="CODE39" bc-height="30"
+                        [bc-value]="ticketForm.value.printNumber"></ngx-barcode>
+                </div>
+                <div class="col-6" style="border: 2px solid black;">
+                    <h5>Weight: {{ ticketForm.value.weight }}lbs</h5>
+                    <ngx-barcode bc-width="1.5" bc-format="CODE39" bc-height="30" [bc-value]="ticketForm.value.weight">
+                    </ngx-barcode>
+                </div>
+                <div class="col-8" style="border: 2px solid black;">
+                    <h5>ISBN: {{ ticketForm.value.isbn }}</h5>
+                    <ngx-barcode bc-width="1.5" bc-format="CODE39" bc-height="30" [bc-value]="ticketForm.value.isbn">
+                    </ngx-barcode>
+                </div>
+                <div class="col-4" style="border: 2px solid black;">
+                    <h5>Quantity: {{ ticket.qtyPerBox }}</h5>
+                    <ngx-barcode bc-width="1.5" bc-format="CODE39" bc-height="30" [bc-value]="ticket.qtyPerBox">
+                    </ngx-barcode>
+                </div>
+                <div class="row col-12">
+                    <span>Manufactured by EPAC, Monterry, MX . &nbsp; {{ dueDate }} &nbsp;<strong
+                            style="border: 1px solid black;">BOX {{ticket.index}} of
+                            {{ tickets.length }}</strong></span>
+                </div>
+                <br>
+                <br>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

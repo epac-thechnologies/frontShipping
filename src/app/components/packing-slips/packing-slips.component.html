@@ -1,0 +1,189 @@
+<h5 style="color: #0a3d62;font-weight: bold;" class="text-center">Finished Orders</h5>
+<hr>
+
+<div class="container">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      <div class="form-row align-items-center justify-content-center">
+        <div class="col-auto">
+  
+          <input #search type="text" class="form-control mb-2" id="search" placeholder="Please enter ISBN or Order Id"
+            formControlName="search">
+        </div>
+
+        <div class="col-auto">
+          <div class="form-check mb-2">
+            <input class="form-check-input" name="searchCriteria" type="radio" id="orderId" value="orderId"
+              formControlName="searchCriteria">
+            <label class="form-check-label" for="orderId">
+              Search by OrderId
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input class="form-check-input" name="searchCriteria" type="radio" id="isbn" value="isbn"
+              formControlName="searchCriteria">
+            <label class="form-check-label" for="isbn">
+              Search by ISBN
+            </label>
+          </div>
+        </div>
+
+  
+        <div class="col-auto">
+          <button [disabled]="!searchForm.valid" type="submit" class="btn btn-primary" (click)="searchForOrder()"
+            style="margin-top: -8px;">Search <i class="fa fa-search"></i></button>
+        </div>
+      </div>
+    </form>
+  
+    <br>
+  
+    <div *ngIf="rowData.length == 0; else datatable" class="alert alert-info" role="alert">
+      There is no data to show, please import an order using ISBN or Order Id.
+    </div>
+    <ng-template #datatable>
+      <app-datatable [columnDefs]="columnDefs" [rowData]="rowData" [buttons]="buttons"></app-datatable>
+    </ng-template>
+  </div>
+
+
+  <!--packing slip modal-->
+<div class="modal fade" id="packingSlipModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document" style="left: -200px;">
+  <div class="modal-content" style="margin:10px!important;width: 21cm; height: 29.7cm;">
+    <div class="modal-header">
+      <!--
+      <button type="button" class="btn btn-primary" printSectionId="packingSlip" ngxPrint
+        printTitle="PackingSlip_{{orderInfo.orderId}}" [useExistingCss]="true" >Download PackingSlip</button>
+        -->
+        <button type="button" class="btn btn-primary" (click)="generatePackingSlip()" >Download PackingSlip</button>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="container" style="padding: 15px!important;" #packingSlip id="packingSlip">
+        <div style="padding: 45px;">
+          <!--logo-->
+          <div class="row"><img src="../../../../assets/img/logo-epac.png" style="width: 4cm;"></div>
+          <!--title-->
+          <div class="text-center justify-content-center">
+            <h4>Packing slip</h4>
+            <h4>{{selectedOrder.packing_slips_id}}</h4>
+          </div>
+          <!--ship info-->
+          <div class="row mb-2">
+            <div class="col-5 boxes">
+              <p>Ship To: <span>{{selectedOrder.clientId}}</span></p>
+              <p>Attn: <span>Recieving</span></p>
+              <p>{{selectedOrder.adressShipping}}</p>
+
+            </div>
+            <div class="col-2"></div>
+            <div class="col-5 boxes">
+              <p>Bill To: <span>{{selectedOrder.clientId}}</span></p>
+              <p>Attn: <span>{{selectedOrder.accountmanager}}</span></p>
+              <p>{{selectedOrder.adressBilling}}</p>
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-5 boxes">
+              <p>Customer Name:&nbsp;&nbsp;&nbsp;<span>{{selectedOrder.accountName}}</span></p>
+              <p>Ship Date:&nbsp;&nbsp;&nbsp;<span>{{selectedOrder.shipDate | date: 'yyyy-MM-dd'}}</span></p>
+              <p>Delivery Date:&nbsp;&nbsp;&nbsp;<span>{{selectedOrder.dueDate | date: 'yyyy-MM-dd'}}</span></p>
+              <p>Ship Method:&nbsp;&nbsp;&nbsp;<span>UPS-Frt</span></p>
+              <p>Freight Acct.</p>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-5 boxes">
+              <p>Order No.&nbsp;&nbsp;&nbsp;<span>{{selectedOrder.oldOrdreid}}</span></p>
+              <p>Purchase Order No.&nbsp;&nbsp;&nbsp;<span></span></p>
+              <p>Third party PO No.&nbsp;&nbsp;&nbsp;<span></span></p>
+            </div>
+          </div>
+
+          <!--Table-->
+          <br>
+          <div class="row">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Part Number</th>
+                  <th scope="col">Rev.</th>
+                  <th scope="col">PO No.</th>
+                  <th scope="col">Order Qty <br>
+                    Ship Qty
+                  </th>
+                  <th scope="col">Packing Info</th>
+                  <th scope="col">Box Wt(Kg)</th>
+                  <th scope="col">Pallets Wt(Kg)</th>
+                  <th scope="col">Comment.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">{{selectedOrder.isbn}} <br> {{selectedOrder.title}}</th>
+                  <td>&nbsp;</td>
+                  <td>{{ selectedOrder.poNumber }}</td>
+                  <td>{{ selectedOrder.quantity }} <br> {{selectedOrder.produced}}</td>
+                  <td>{{ selectedOrder.numberOfBoxes }} boxes</td>
+                  <td>{{ selectedOrder.boxWeight | number}}</td>
+                  <td>{{ selectedOrder.palletWeight | number }}</td>
+                  <td>Complete</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <br>
+
+          <!--Tracking-->
+          <div class="row" style="border-bottom: 1px solid black;">
+            <p style="margin-left: 10px;">Tracking Numbers: &nbsp;&nbsp;&nbsp;&nbsp; <span>{{selectedOrder.notes}}</span></p>
+          </div>
+          <!--Weight-->
+          <div class="row" style="border-bottom: 1px solid black;">
+            <p style="margin-left: 10px;">Weight(Kg):
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <span>{{ selectedOrder.palletWeight | number }}</span></p>
+          </div>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <!--received-->
+          <div class="row">
+            <div class="col-3">Received by: </div>
+            <div class="col-3 writeLine"></div>
+            <div class="col-1">Date: </div>
+            <div class="col-2 writeLine"></div>
+            <div class="col-1">Time: </div>
+            <div class="col-2 writeLine"></div>
+          </div>
+
+          <!--Footer-->
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <div class="row justify-content-center">
+            <p>EPAC Technologies . 2561 Grant Ave . San Leandro, CA 94579</p>
+            <p>Phone: 510.317.7979 . Fax: 510.317.7993 . Doc. No: SHP 7.5.3-1 . www.epac.com</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+  </div>
+</div>
+</div>
+
+
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
