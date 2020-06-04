@@ -16,10 +16,10 @@ export class DataService {
 
   private eventEmitter: EventEmitter<any> = new EventEmitter<any>();
 
-  private shippingService = 'http://epac.orderservice.mx:8020/ShippingService';
-  private assemblyService = 'http://epac.assemblyservice.mx:8083/AssemblyService';
-  private orderSerivce = 'http://epac.orderservice.mx:8011/ClientService';
-  private archiveService = 'http://epac.shippingarchive.mx:8022/OrdreArchive';
+  private shippingService = 'http://192.168.75.215:7777/SHIPPING-SERVICE';
+  private assemblyService = 'http://192.168.75.215:7777/ASSEMBLYSTATION';
+  private orderSerivce = 'http://192.168.75.215:7777/CLIENT-SERVICE';
+  private archiveService = 'http://192.168.75.215:7777/ARCHIVE-BILLING-SERVICE';
 
   constructor(
     private http: HttpClient,
