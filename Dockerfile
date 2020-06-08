@@ -8,7 +8,7 @@ FROM nginx:stable-alpine
 
 # set working directory
 #WORKDIR /app
-
+CMD export PATH=/sbin:/usr/sbin:/usr/bin:/usr/local/bin
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
