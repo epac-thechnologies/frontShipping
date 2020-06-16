@@ -71,7 +71,7 @@ export class DataService {
 
   setStatusToComplete(id, order) {
     return this.http.post(
-      this.shippingService + `/ordres/complete/${id}`, order 
+      this.shippingService + `/ordre/complete/${id}`, order 
     );
   }
 
